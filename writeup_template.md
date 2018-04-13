@@ -50,6 +50,66 @@ The idea is to take feature vectors for all 3 color channels. Here is how the si
 
 Taking HOG a.k.a. Histogram Of Oriented gradients is a great way to extract features from an image. To extract them, I used `skimage`'s `hog` function.
 
+![Gray image example](/images/HOG_features.png)
+
+It seems like HOG feature represents the shape of an object. And gets rid of most of the noise. Very useful.
+
+So I decided to use all of the described features for classification. To do it, I just extract all features vectors and then concatenate them for each image.
+
+## 3. Train classifier.
+
+To actually choose the parameters and the color scheme to feed to classifier, I decided to run the classifier with different parameters directly and look how will they work. The classifier itself can tell what parameters work better. 
+
+First I just ran a default SVM classifier with some default parameters for feature extraction. The images were in 'RGB' color space. And I got an accuracy of 95.5% on a test set
+```
+Using: 12 orientations 8 pixels per cell and 2 cells per block
+Feature vector length: 7872
+43.87 Seconds to train SVC...
+Test Accuracy of SVC =  0.9552
+```
+
+Then I tried to use different color spaces for classification:
+
+```
+Using: 12 orientations 8 pixels per cell and 2 cells per block
+Feature vector length: 7872
+
+Color space = HSV
+Test Accuracy of SVC =  0.9778
+
+Color space = HLS
+Test Accuracy of SVC =  0.978
+
+Color space = YUV
+Test Accuracy of SVC =  0.9851
+
+Color space = YCrCb
+Test Accuracy of SVC =  0.9817
+```
+
+In this experiment YUV color scheme have shown the best results. But what if some of color schemes are better for different features? I wanted to make some tests.
+
+#### using only spatial bin features for classification. trying different color schemes:
+
+```
+Using: 12 orientations 8 pixels per cell and 2 cells per block
+Feature vector length: 768
+
+Color space = RGB
+Test Accuracy of SVC =  0.9127
+
+Color space = HSV
+Test Accuracy of SVC =  0.9051
+
+Color space = HLS
+Test Accuracy of SVC =  0.8902
+
+Color space = YUV
+Test Accuracy of SVC =  0.9285
+
+Color space = YCrCb
+Test Accuracy of SVC =  0.9305
+```
 
 ---
 
