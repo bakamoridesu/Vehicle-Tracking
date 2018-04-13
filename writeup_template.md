@@ -12,12 +12,33 @@ The goals / steps of this project are the following:
 
 ### 1. Dataset exploration
 
-The dataset contains 8792 vehicle images and 8968 non-vehicle images with the shape of (64, 64, 3).
+The dataset contains 8792 vehicle images and 8968 non-vehicle images with the shape of (64, 64, 3) each.
 
 Here are some examples of the images:
 
 ![Gray image example](/images/vehicle_images.png)
 ![Gray image example](/images/non_vehicle_images.png)
+
+### 2. Feature extraction.
+
+#### 2.1. Spatial binning.
+
+For the one of the features I performed spatial binning on an image to retain information to help in finding vehicles.
+First I had resized an image to smaller size yet the car was still recognizeable. Then I had flattened the array of the raw pixels of a resulted image. 
+
+Here is how do the binning features look like for vehicles and non-vehicles:
+
+![Gray image example](/images/vehicle_spat.png)
+![Gray image example](/images/non_vehicle_spat.png)
+
+The car histograms seem to have roughly similar forms, and the histograms of all other road stuff vary a lot. But I want to take a closer look at typical car image and histogram in comparison with typical non-car.
+
+![Gray image example](/images/single_vehicle_spat.png)
+![Gray image example](/images/single_vehicle_hist.png)
+
+So the histogram of the typical back of a car looks like exponential decay, and the road image's histograms are different but mostly they look more like normal distribution. This feature seems to be useful for car detection.
+
+#### 2.2. 
 
 ---
 
