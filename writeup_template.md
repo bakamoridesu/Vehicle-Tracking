@@ -12,11 +12,12 @@ The goals / steps of this project are the following:
 
 ### 1. Dataset exploration
 
-The dataset contains 8792 vehicle images and 8968 non-vehicle images.
+The dataset contains 8792 vehicle images and 8968 non-vehicle images with the shape of (64, 64, 3).
+
 Here are some examples of the images:
 
 ![Gray image example](/images/vehicle_images.png)
-
+![Gray image example](/images/non_vehicle_images.png)
 
 ---
 
