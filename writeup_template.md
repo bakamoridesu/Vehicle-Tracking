@@ -111,11 +111,83 @@ Color space = YCrCb
 Test Accuracy of SVC =  0.9305
 ```
 
+#### using only color features
+
+```
+Using: 12 orientations 8 pixels per cell and 2 cells per block
+Feature vector length: 48
+
+Color space = RGB
+Test Accuracy of SVC =  0.4958
+
+Color space = HSV
+Test Accuracy of SVC =  0.8238
+
+Color space = HLS
+Test Accuracy of SVC =  0.8269
+
+Color space = YUV
+Test Accuracy of SVC =  0.5206
+
+Color space = YCrCb
+Test Accuracy of SVC =  0.5051
+```
+
+#### using only hog features
+
+```
+Using: 12 orientations 8 pixels per cell and 2 cells per block
+Feature vector length: 7056
+
+Color space = RGB
+Test Accuracy of SVC =  0.9274
+
+Color space = HSV
+Test Accuracy of SVC =  0.9479
+
+Color space = HLS
+Test Accuracy of SVC =  0.9519
+
+Color space = YUV
+Test Accuracy of SVC =  0.9578
+
+Color space = YCrCb
+Test Accuracy of SVC =  0.9555
+```
+So the YUV and YCrCb formats are almost senseless to color features. But the HLS format is good for it. Also the YUV format seems to be good for HOG features extraction. 
+
+Then I found the right color schemes for all types of features, I tried to classify images varying parameters like number of orientations and pixels per cell. And finally I tried different classifiers. The best classifier was an `MLPClassifier`(multi-layer perceptron) from `sklearn.neural_network` package.
+
+```
+20.15 Seconds to train MLP...
+Test Accuracy of MLP =  0.9969
+```
+So with an accuracy of 99.69% the confusion matrix looks like this:
+
+![Gray image example](/images/matrix.png)
+
+Seems that without additional tricks there should not be a lot of false-positives.
+
+## 4. Detection pipeline.
+
+For the single image vehicle detection I implemented a sliding-window algorithm. There is a small size window sliding along the X and Y axis of an image. For every window position the algorithm extracts all the features and the classifier predicts if there is a car detected. If the car is detected within a window, the algorithm draws a box around the window. I use two window sizes, passing them as a scale of the default size. So if the default size is 64 and the scale is 1.5, the window size becomes 64x1.5 = 96 pixels for width and height.
+
+![Gray image example](/images/result_2win.png)
+
+Sometimes the false-positives can be found. To remove them I use threshold for the boxes found. So if the threshold equals 1, some random false-positives represented by one box will be removed. To implement thresholding I use heatmaps, adding 1 to all the pixels fenced by a box. So if two boxes are overlapping, the pixels in the region of overlap will have the value of 2, the non-overlapped pixels will have value of 1 and all other pixel values will equal zero.
+
+![Gray image example](/images/heatmap.png)
+
+Then, to draw box around the heatmap, I use `label` function from `scipy.ndimage.measurements`
+
+![Gray image example](/images/boxes.png)
+
+For the video pipeline I don't use a single image threshold but instead I use a threshold for previous states. If the car was not presented on previous frames and was found on the current frame, the algorithm considers it as an accidentally found false-positive.
+The final video can be found here: https://github.com/bakamoridesu/Vehicle-Tracking/blob/master/project_video.mp4
+
 ---
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+At this point the algorithm is doing OK. But it needs some improvements in execution speed and detection accuracy. For the former I want to try taking HOG features from the whole image and then slide along the HOG cells. I've already added some TODOs in the code to start working on it. Will do later. For the latter I want to try using more window sizes and applying threshold for every size. But it's possible only improving the execution speed.
 
