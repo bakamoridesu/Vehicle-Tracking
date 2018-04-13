@@ -10,7 +10,7 @@ The goals / steps of this project are the following:
 * Estimate a bounding box for vehicles detected.
 
 
-### 1. Dataset exploration
+## 1. Dataset exploration
 
 The dataset contains 8792 vehicle images and 8968 non-vehicle images with the shape of (64, 64, 3) each.
 
@@ -19,9 +19,9 @@ Here are some examples of the images:
 ![Gray image example](/images/vehicle_images.png)
 ![Gray image example](/images/non_vehicle_images.png)
 
-### 2. Feature extraction.
+## 2. Feature extraction.
 
-#### 2.1. Spatial binning.
+### 2.1. Spatial binning.
 
 For the one of the features I performed spatial binning on an image to retain information to help in finding vehicles.
 First I had resized an image to smaller size yet the car was still recognizeable. Then I had flattened the array of the raw pixels of a resulted image. 
@@ -38,7 +38,18 @@ The car histograms seem to have roughly similar forms, and the histograms of all
 
 So the histogram of the typical back of a car looks like exponential decay, and the road image's histograms are different but mostly they look more like normal distribution. This feature seems to be useful for car detection.
 
-#### 2.2. 
+### 2.2. Histograms of color.
+
+Now I'll look at histograms of pixel intensity (color histograms) as features.
+
+The idea is to take feature vectors for all 3 color channels. Here is how the single image vectors look like:
+
+![Gray image example](/images/color_hist.png)
+
+### 2.3. HOG features.
+
+Taking HOG a.k.a. Histogram Of Oriented gradients is a great way to extract features from an image. To extract them, I used `skimage`'s `hog` function.
+
 
 ---
 
